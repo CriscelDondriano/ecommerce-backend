@@ -57,9 +57,8 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        try {
+
             $request->validate([
-                'barcode' => 'required|unique:products,barcode,' . $product->id,
                 'name' => 'required',
                 'description' => 'required',
                 'price' => 'required|numeric',
@@ -67,26 +66,21 @@ class ProductController extends Controller
                 'category' => 'required',
             ]);
 
-            $product->update($request->all());
-            return $product;
-        } catch (\Exception $e) {
-            // Log the error message using the Log facade
-            Log::error('Error updating product: ' . $e->getMessage());
-            // Return a JSON response with an error message
-            return response()->json(['error' => 'Unable to update product'], 500);
-        }
+            $product->barcode = $request->barcode;
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->quantity = $request->quantity;
+            $product->category = $request->category;
+            $product->save();
+            return response()->json();
+     
     }
 
     public function destroy(Product $product)
     {
-        try {
-            $product->delete();
-            return response()->json(null, 204);
-        } catch (\Exception $e) {
-            // Log the error message using the Log facade
-            Log::error('Error deleting product: ' . $e->getMessage());
-            // Return a JSON response with an error message
-            return response()->json(['error' => 'Unable to delete product'], 500);
-        }
+        $product->delete();
+        return response()->json(null, 204);
+       
     }
 }
