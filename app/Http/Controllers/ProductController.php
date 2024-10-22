@@ -83,4 +83,22 @@ class ProductController extends Controller
         return response()->json(null, 204);
        
     }
+
+    public function search(Request $request)
+{
+    // Validate the request input for search
+    $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
+
+    // Retrieve the search term
+    $searchTerm = $request->input('name');
+
+    // Search for products where the name is like the search term
+    $products = Product::where('name', 'LIKE', '%' . $searchTerm . '%')->get();
+
+    // Return the search results
+    return response()->json($products);
+}
+
 }
