@@ -86,19 +86,17 @@ class ProductController extends Controller
 
     public function search(Request $request)
 {
-    // Validate the request input for search
-    $request->validate([
-        'name' => 'required|string|max:255',
-    ]);
+    $query = $request->input('query'); // Get the search query from the request
 
-    // Retrieve the search term
-    $searchTerm = $request->input('name');
+    // Search products based on the query (name or description, etc.)
+    $products = Product::where('name', 'LIKE', "%{$query}%")
+                        ->orWhere('description', 'LIKE', "%{$query}%")
+                        ->orWhere('category', 'LIKE', "%{$query}%")
+                        ->get();
 
-    // Search for products where the name is like the search term
-    $products = Product::where('name', 'LIKE', '%' . $searchTerm . '%')->get();
-
-    // Return the search results
+    // Return the results as a JSON response
     return response()->json($products);
 }
+
 
 }
