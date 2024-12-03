@@ -16,3 +16,8 @@ Route::get('/products/search', [ProductController::class, 'search']);
 
 Route::post('register', [UserController::class,'register']);
 Route::post('login', [UserController::class,'login']);
+
+Route::get('api/store', [ProductController::class, 'index']);
+Route::get('/products/{product}', [ProductController::class, 'show']);
+
+
