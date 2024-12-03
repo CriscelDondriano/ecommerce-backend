@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Controller;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CartController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -19,5 +20,9 @@ Route::post('login', [UserController::class,'login']);
 
 Route::get('api/store', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
+
+Route::post('/cart/add', [CartController::class, 'add']);
+Route::get('/cart', [CartController::class, 'view']);
+Route::delete('/cart/remove/{productId}', [CartController::class, 'remove']);
 
 
