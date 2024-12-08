@@ -11,20 +11,43 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     //
-    function register(Request $req){
-        $user=new User;
-        $user->name=$req->input('name');
-        $user->email=$req->input('email');
-        $user->password= Hash::make($req->input('password'));
-        $user->save();
-        return $user;
-    }
+    public function register(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+        'contact' => 'required|string|max:15',
+    ]);
 
-    function login(Request $req){
-        $user= User::where('email', $req->email)->first();
-        if(!$user || !Hash::check($req->password,$user->password)){
-            return "Invalid";
+    $user = User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => bcrypt($validated['password']),
+        'contact' => $validated['contact'],
+        'role' => $request->input('role', 'user'), // Defaults to 'user'
+    ]);
+
+    return response()->json(['message' => 'User registered successfully'], 201);
+}
+
+
+    public function login(Request $req)
+    {
+        $user = User::where('email', $req->email)->first();
+
+        // Validate user and password
+        if (!$user || !Hash::check($req->password, $user->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
-        return $user;
+
+        // Determine redirection based on the role
+        $redirect = $user->role === 'admin' ? '/ProductManagement' : '/store';
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'redirect' => $redirect
+        ], 200);
     }
 }

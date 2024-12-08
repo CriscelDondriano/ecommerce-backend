@@ -14,13 +14,17 @@ class UserSeeder extends Seeder
             'name' => 'AdminUser',
             'email' => 'admin@example.com',
             'password' => bcrypt('password123'), // Always hash passwords
+            'role' => 'admin',
+            'contact_info' => '1234567890',
         ]);
 
         // You can add more users if needed
         User::create([
-            'name' => 'Admin3',
-            'email' => 'Admin@example.com',
-            'password' => bcrypt('password456'),
+            'name' => 'CustomerUser',
+            'email' => 'Customer@example.com',
+            'password' => bcrypt('Customer1234'),
+            'role' => 'customer',
+            'contact_info' => '9876543210',
         ]);
     }
 }
