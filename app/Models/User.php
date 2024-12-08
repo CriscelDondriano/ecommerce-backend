@@ -11,7 +11,10 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -21,8 +24,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
-
+    
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -33,7 +37,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public $timestamps=false;
+    public $timestamps = false;  // Ensure this matches the database table configuration
+
     /**
      * The attributes that should be cast.
      *
@@ -42,4 +47,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
 }
